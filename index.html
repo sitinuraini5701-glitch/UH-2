@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lembar Soal Digital SPLTV dan SPtLDV - Maximum Security</title>
+    
+    <!-- MathJax CDN untuk Render Formula Matematika -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+            --paket-a-color: #1d4ed8;
+            --paket-b-color: #0d9488;
+            --paket-c-color: #7c3aed;
+            --paket-d-color: #c026d3;
+        }
+
+        /* Anti-Seleksi & Anti-Drag Ketat */
+        *, *::before, *::after {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+            -webkit-touch-callout: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: #f1f5f9;
+            color: var(--text-color);
+            margin: 0;
+            padding: 12px;
+            line-height: 1.5;
+            touch-action: pan-y;
+        }
+
+        /* Tampilan Layar Hitam Darurat jika Fokus Hilang */
+        #blackout-curtain {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: #000000;
+            z-index: 999999999;
+        }
+
+        #password-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-card {
+            background: #ffffff;
+            padding: 32px 24px;
+            border-radius: 16px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-align: center;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            text-transform: uppercase;
+        }
+
+        .btn-login {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            margin-top: 14px;
+            cursor: pointer;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .status-bar {
+            background-color: var(--bg-color);
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+        }
+
+        .violation-badge {
+            background-color: #ef4444;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 800;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 16px;
+            padding: 16px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: #ffffff;
+            border-radius: 12px;
+        }
+
+        .selector-box {
+            text-align: center;
+            margin-bottom: 16px;
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background-color: #f1f5f9;
+            color: #334155;
+            border: 2px solid #cbd5e1;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            flex: 1 1 120px;
+            max-width: 180px;
+            transition: all 0.2s ease;
+        }
+
+        .btn.active-a { background-color: var(--paket-a-color) !important; color: white !important; border-color: var(--paket-a-color) !important; }
+        .btn.active-b { background-color: var(--paket-b-color) !important; color: white !important; border-color: var(--paket-b-color) !important; }
+        .btn.active-c { background-color: var(--paket-c-color) !important; color: white !important; border-color: var(--paket-c-color) !important; }
+        .btn.active-d { background-color: var(--paket-d-color) !important; color: white !important; border-color: var(--paket-d-color) !important; }
+
+        .placeholder-box {
+            text-align: center;
+            padding: 40px 16px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+            color: #64748b;
+        }
+
+        .mobile-instruction {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .question-header {
+            background-color: #f1f5f9;
+            padding: 10px 16px;
+            font-weight: bold;
+            color: #475569;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question-body {
+            padding: 18px;
+            position: relative;
+            min-height: 100px;
+        }
+
+        .touch-mask {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #1e293b;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 5;
+            cursor: pointer;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .touch-mask.revealed { opacity: 0 !important; pointer-events: none !important; }
+        .sub-question { margin-top: 8px; padding-left: 20px; }
+        .sub-question li { margin-bottom: 6px; }
+        .hidden { display: none !important; }
+
+        #dynamic-watermark {
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            font-size: 1rem;
+            font-weight: 900;
+            color: rgba(220, 38, 38, 0.25);
+            text-transform: uppercase;
+            transform: rotate(-15deg);
+            white-space: nowrap;
+            transition: all 0.5s ease-in-out;
+        }
+
+        #security-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: #000000;
+            color: #ffffff;
+            z-index: 9999999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .btn-resume {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        @media print { html, body { display: none !important; } }
+    </style>
+</head>
+<body oncontextmenu="return false;" ondragstart="return false;" ondrop="return false;">
+
+<!-- Tirai Hitam Instan saat Fokus Hilang -->
+<div id="blackout-curtain"></div>
+
+<div id="dynamic-watermark">DOKUMEN UJIAN RAHASIA - ANTI SCREENSHOT</div>
+
+<div id="password-screen">
+    <div class="login-card">
+        <h2>🔐 UJIAN DIGITAL</h2>
+        <p>Masukkan Token / Password ujian:</p>
+        <input type="password" id="pass-input" class="login-input" placeholder="PASSWORD" onkeydown="checkEnter(event)">
+        <button onclick="verifyPassword()" class="btn-login">MASUK UJIAN</button>
+        <div id="pass-error" class="error-msg hidden">⚠️ Password Salah!</div>
+    </div>
+</div>
+
+<div id="security-overlay">
+    <h2 id="overlay-title" style="color:#ef4444;">⚠️ TERDETEKSI PELANGGARAN</h2>
+    <p id="overlay-msg">Dilarang melakukan screenshot, keluar browser, atau berpindah aplikasi.</p>
+    <div id="overlay-violation-info" style="margin-top: 10px; font-weight: bold; color: #f87171;"></div>
+    <button id="btn-resume-exam" class="btn-resume" onclick="resumeExam()">KEMBALI KE SOAL</button>
+</div>
+
+<div class="container hidden" id="exam-content">
+    <div class="status-bar">
+        <div>🔒 HIGH-SECURITY EXAM SYSTEM</div>
+        <div>Pelanggaran: <span id="violation-count" class="violation-badge">0 / 3</span></div>
+    </div>
+
+    <header>
+        <h1 style="margin:0; font-size:1.3rem;">LEMBAR SOAL DIGITAL SPLTV DAN SPtLDV</h1>
+        <p style="margin:0; color:#94a3b8; font-size:0.8rem;">Sistem Proteksi Maksimal Anti-Screenshot (4 Paket Ujian)</p>
+    </header>
+
+    <div class="selector-box">
+        <div id="selector-title" style="font-weight:700; margin-bottom:10px; font-size:0.9rem; color:#475569;">PILIH PAKET SOAL UNTUK MEMULAI:</div>
+        <div class="btn-group">
+            <button id="btn-a" class="btn" onclick="selectPaket('A')">Paket A</button>
+            <button id="btn-b" class="btn" onclick="selectPaket('B')">Paket B</button>
+            <button id="btn-c" class="btn" onclick="selectPaket('C')">Paket C</button>
+            <button id="btn-d" class="btn" onclick="selectPaket('D')">Paket D</button>
+        </div>
+    </div>
+
+    <div id="placeholder" class="placeholder-box">
+        <h3>Soal Masih Terkunci</h3>
+        <p>Silakan pilih Paket A, Paket B, Paket C, atau Paket D di atas untuk membuka soal.</p>
+    </div>
+
+    <div id="questions-container" class="hidden">
+        <div class="mobile-instruction">
+            👆 <strong>PROTEKSI ANTI-SCREENSHOT:</strong> Tahan / Sentuh area kotak soal untuk membaca.
+        </div>
+
+        <!-- SOAL NOMOR 1: PERMASALAHAN SPLTV -->
+        <div class="question-card">
+            <div class="question-header">
+                <span>SOAL NOMOR 1</span>
+                <span style="font-size:0.8rem; background:#e2e8f0; padding:2px 8px; border-radius:4px; color:#334155;">Permasalahan SPLTV</span>
+            </div>
+            <div class="question-body">
+                <div class="touch-mask" ontouchstart="revealQuestion(this)" ontouchend="hideQuestion(this)" ontouchcancel="hideQuestion(this)" onmousedown="revealQuestion(this)" onmouseup="hideQuestion(this)" onmouseleave="hideQuestion(this)">
+                    👆 SENTUH & TAHAN DI SINI UNTUK MEMBACA SOAL #1
+                </div>
+
+                <!-- PAKET A -->
+                <div class="col-a">
+                    <p>Bu Anita, Bu Budi, dan Bu Chintya berbelanja buah-buahan segar di toko yang sama dengan rincian pembelian sebagai berikut:</p>
+                    <ul>
+                        <li>Bu Anita membeli 2 kg apel, 1 kg jeruk, dan 1 kg mangga seharga Rp85.000,00.</li>
+                        <li>Bu Budi membeli 1 kg apel, 2 kg jeruk, dan 1 kg mangga seharga Rp80.000,00.</li>
+                        <li>Bu Chintya membeli 1 kg apel, 1 kg jeruk, dan 2 kg mangga seharga Rp75.000,00.</li>
+                    </ul>
+                    <ol type="a" class="sub-question">
+                        <li>Buatlah model matematika dalam bentuk Sistem Persamaan Linear Tiga Variabel (SPLTV) dari permasalahan tersebut!</li>
+                        <li>Hitunglah harga per kilogram untuk masing-masing jenis buah (apel, jeruk, dan mangga)!</li>
+                        <li>Jika Bu Dina membeli 3 kg apel, 2 kg jeruk, dan 1 kg mangga di toko yang sama, berapakah jumlah uang yang harus dibayar oleh Bu Dina?</li>
+                    </ol>
+                </div>
+
+                <!-- PAKET B -->
+                <div class="col-b hidden">
+                    <p>Toko Alat Tulis "Maju Bersama" menyediakan tiga jenis paket perlengkapan sekolah berupa pensil, pulpen, dan buku tulis dengan harga sebagai berikut:</p>
+                    <ul>
+                        <li>Paket A berisi 3 pensil, 2 pulpen, dan 1 buku tulis seharga Rp22.000,00.</li>
+                        <li>Paket B berisi 1 pensil, 3 pulpen, dan 2 buku tulis seharga Rp25.000,00.</li>
+                        <li>Paket C berisi 2 pensil, 1 pulpen, dan 3 buku tulis seharga Rp25.000,00.</li>
+                    </ul>
+                    <ol type="a" class="sub-question">
+                        <li>Susunlah sistem persamaan linear tiga variabel (SPLTV) yang merepresentasikan permasalahan di atas!</li>
+                        <li>Berapakah harga satuan dari masing-masing barang (1 pensil, 1 pulpen, dan 1 buku tulis)?</li>
+                        <li>Jika seorang siswa membeli 2 pensil, 2 pulpen, dan 2 buku tulis secara terpisah, tentukan total biaya yang harus dibayar siswa tersebut!</li>
+                    </ol>
+                </div>
+
+                <!-- PAKET C -->
+                <div class="col-c hidden">
+                    <p>Tiga orang bersaudara (Andi, Budi, dan Cici) mengumpulkan uang saku mingguan mereka untuk ditabung dengan informasi sebagai berikut:</p>
+                    <ul>
+                        <li>Jumlah total uang saku mingguan Andi, Budi, dan Cici adalah Rp160.000,00.</li>
+                        <li>Uang saku Budi bernilai Rp10.000,00 lebih banyak dibandingkan uang saku Andi.</li>
+                        <li>Uang saku Cici bernilai Rp10.000,00 kurang dari dua kali uang saku Andi.</li>
+                    </ul>
+                    <ol type="a" class="sub-question">
+                        <li>Sajikan permasalahan tersebut dalam bentuk sistem persamaan linear tiga variabel (SPLTV)!</li>
+                        <li>Tentukan besarnya uang saku mingguan masing-masing anak (Andi, Budi, dan Cici)!</li>
+                        <li>Berapakah selisih uang saku antara Cici dan Budi?</li>
+                    </ol>
+                </div>
+
+                <!-- PAKET D -->
+                <div class="col-d hidden">
+                    <p>Sebuah toko suvenir menjual tiga jenis barang aksesoris, yaitu gantungan kunci ($x$), stiker ($y$), dan pembatas buku ($z$). Catatan penjualan beberapa pembeli adalah sebagai berikut:</p>
+                    <ul>
+                        <li>Ahmad membeli 3 gantungan kunci, 2 stiker, dan 1 pembatas buku seharga Rp17.000,00.</li>
+                        <li>Badri membeli 2 gantungan kunci, 1 stiker, dan 2 pembatas buku seharga Rp16.000,00.</li>
+                        <li>Charlie membeli 1 gantungan kunci, 3 stiker, dan 2 pembatas buku seharga Rp17.000,00.</li>
+                    </ul>
+                    <ol type="a" class="sub-question">
+                        <li>Formulasikan model matematika SPLTV dari data pembelian tersebut!</li>
+                        <li>Hitunglah harga satuan dari masing-masing aksesoris tersebut!</li>
+                        <li>Jika Doni hendak membeli 4 gantungan kunci dan 5 stiker, tentukan total harga yang harus dibayar Doni!</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOAL NOMOR 2: PERMASALAHAN SPtLDV -->
+        <div class="question-card">
+            <div class="question-header">
+                <span>SOAL NOMOR 2</span>
+                <span style="font-size:0.8rem; background:#e2e8f0; padding:2px 8px; border-radius:4px; color:#334155;">Permasalahan SPtLDV</span>
+            </div>
+            <div class="question-body">
+                <div class="touch-mask" ontouchstart="revealQuestion(this)" ontouchend="hideQuestion(this)" ontouchcancel="hideQuestion(this)" onmousedown="revealQuestion(this)" onmouseup="hideQuestion(this)" onmouseleave="hideQuestion(this)">
+                    👆 SENTUH & TAHAN DI SINI UNTUK MEMBACA SOAL #2
+                </div>
+
+                <!-- PAKET A -->
+                <div class="col-a">
+                    <p>Sebuah pabrik roti memproduksi dua jenis produk, yaitu Roti Manis ($x$) dan Roti Tawar ($y$). Kebutuhan bahan baku dan persediaan yang tersedia dijelaskan sebagai berikut:</p>
+                    <ul>
+                        <li>Untuk memproduksi 1 unit Roti Manis diperlukan 200 gram tepung terigu dan 50 gram mentega.</li>
+                        <li>Untuk memproduksi 1 unit Roti Tawar diperlukan 100 gram tepung terigu dan 50 gram mentega.</li>
+                        <li>Persediaan bahan di gudang paling banyak adalah 10 kg (10.000 gram) tepung terigu dan 3,5 kg (3.500 gram) mentega.</li>
+                        <li>Keuntungan penjualan 1 unit Roti Manis adalah Rp3.000,00 dan 1 unit Roti Tawar adalah Rp2.000,00.</li>
+                    </ul>
+                    <ol type="a" class="sub-question">
+                        <li>Tuliskan sistem pertidaksamaan linear dua variabel (SPtLDV) dan fungsi objektif dari permasalahan ini!</li>
+                        <li>Gambarkan daerah himpunan penyelesaian (DHP) dari sistem pertidaksamaan tersebut pada bidang Kartesius!</li>
+                        <li>Tentukan jumlah Roti Manis dan Roti Tawar yang harus diproduksi agar memperoleh **keuntungan maksimum**, serta tentukan besar keuntungan maksimum tersebut!</li>
+                    </ol>
+                </div>
+
+                <!-- PAKET B -->
+                <div class="col-b hidden">
+                    <p>Seorang pengusaha parkir mengelola lahan parkir seluas $360\text{ m}^2$. Lahan tersebut dirancang untuk menampung kendaraan jenis Mobil Sedan ($x$) dan Bus ($y$) dengan ketentuan sebagai berikut:</p>
+                    <ul>
+                        <li>Luas rata-rata yang diperlukan untuk parkir 1 unit Mobil Sedan adalah $6\text{ m}^2$ dan 1 unit Bus adalah $24\text{ m}^2$.</li>
+                        <li>Lahan parkir tersebut tidak dapat menampung lebih dari 30 kendaraan secara keseluruhan.</li>
+                        <li>Biaya tarif parkir untuk 1 unit Mobil Sedan adalah Rp5.000,00 dan untuk 1 unit Bus adalah Rp12.000,00.</li>
+                    </ul>
+                    <ol type="a" class="sub-question">
+                        <li>Buatlah model matematika dalam bentuk sistem pertidaksamaan linear dua variabel (SPtLDV) beserta fungsi tujuannya!</li>
+                        <li>Sketsakan daerah penyelesaian sistem pertidaksamaan tersebut pada koordinat Kartesius!</li>
+                        <li>Tentukan berapa banyak Mobil Sedan dan Bus yang diparkir agar pengusaha memperoleh **pendapatan maksimum**, serta hitunglah pendapatan maksimum tersebut!</li>
+                    </ol>
+                </div>
+
+                <!-- PAKET C -->
+                <div class="col-c hidden">
+                    <p>Sebuah rumah konveksi memproduksi dua model pakaian eksklusif, yaitu Gaun ($x$) dan Stelan Jas ($y$). Kebutuhan bahan baku dan kapasitas produksi adalah sebagai berikut:</p>
+                    <ul>
+                        <li>Untuk membuat 1 unit Gaun dibutuhkan 2 meter kain sutra dan 1 meter kain wol.</li>
+                        <li>Untuk membuat 1 unit Stelan Jas dibutuhkan 1 meter kain sutra dan 3 meter kain wol.</li>
+                        <li>Persediaan kain yang tersedia di konveksi adalah paling banyak 20 meter kain sutra dan 30 meter kain wol.</li>
+                        <li>Keuntungan bersih untuk 1 unit Gaun adalah Rp150.000,00 dan untuk 1 unit Stelan Jas adalah Rp200.000,00.</li>
+                    </ul>
+                    <ol type="a" class="sub-question">
+                        <li>Susunlah sistem pertidaksamaan linear dua variabel (SPtLDV) dan fungsi kendala yang sesuai!</li>
+                        <li>Tentukan titik-titik pojok dan gambarkan daerah penyelesaiannya pada bidang Cartesius!</li>
+                        <li>Berapakah jumlah Gaun dan Stelan Jas yang harus diproduksi agar diperoleh **keuntungan maksimum**, dan berapa besar keuntungan maksimum tersebut?</li>
+                    </ol>
+                </div>
+
+                <!-- PAKET D -->
+                <div class="col-d hidden">
+                    <p>Seorang peternak ingin menyiapkan pakan harian campuran untuk hewan ternaknya yang terdiri dari Pakan A ($x$ kg) dan Pakan B ($y$ kg). Informasi kandungan nutrisi dan biaya pakan adalah sebagai berikut:</p>
+                    <ul>
+                        <li>Setiap kg Pakan A mengandung 2 unit nutrisi X dan 1 unit nutrisi Y.</li>
+                        <li>Setiap kg Pakan B mengandung 1 unit nutrisi X dan 3 unit nutrisi Y.</li>
+                        <li>Kebutuhan nutrisi harian ternak disyaratkan **paling sedikit (minimum)** 12 unit nutrisi X dan 11 unit nutrisi Y.</li>
+                        <li>Harga beli 1 kg Pakan A adalah Rp8.000,00 dan harga 1 kg Pakan B adalah Rp10.000,00.</li>
+                    </ul>
+                    <ol type="a" class="sub-question">
+                        <li>Formulasikan model matematika sistem pertidaksamaan linear dua variabel (SPtLDV) dan fungsi biaya minimumnya!</li>
+                        <li>Gambarkan daerah himpunan penyelesaian (DHP) yang memenuhi kebutuhan nutrisi minimum tersebut!</li>
+                        <li>Tentukan kombinasi banyaknya Pakan A dan Pakan B yang harus dibeli agar kebutuhan nutrisi ternak terpenuhi dengan **biaya seminimal mungkin (minimum)**, serta berapakah biaya minimum tersebut?</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const EXAM_PASSWORD = "SPLTV2026";
+    let isPackageSelected = false;
+    let violations = 0;
+    const MAX_VIOLATIONS = 3;
+    let isTerminated = false;
+
+    function verifyPassword() {
+        const inputVal = document.getElementById('pass-input').value.trim();
+        if (inputVal === EXAM_PASSWORD) {
+            document.getElementById('password-screen').style.display = 'none';
+            document.getElementById('exam-content').classList.remove('hidden');
+        } else {
+            document.getElementById('pass-error').classList.remove('hidden');
+            document.getElementById('pass-input').value = '';
+        }
+    }
+
+    function checkEnter(e) { if (e.key === 'Enter') verifyPassword(); }
+
+    // Watermark Bergerak
+    setInterval(() => {
+        const wm = document.getElementById('dynamic-watermark');
+        wm.style.top = Math.floor(Math.random() * (window.innerHeight - 80)) + 'px';
+        wm.style.left = Math.floor(Math.random() * (window.innerWidth - 200)) + 'px';
+    }, 1500);
+
+    function revealQuestion(el) { el.classList.add('revealed'); }
+    function hideQuestion(el) { el.classList.remove('revealed'); }
+    function hideAllQuestions() {
+        document.querySelectorAll('.touch-mask').forEach(m => m.classList.remove('revealed'));
+    }
+
+    function enterFullscreen() {
+        let elem = document.documentElement;
+        if (elem.requestFullscreen) elem.requestFullscreen().catch(() => {});
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+    }
+
+    function selectPaket(type) {
+        if (isPackageSelected || isTerminated) return;
+        isPackageSelected = true;
+        enterFullscreen();
+
+        document.getElementById('placeholder').style.display = 'none';
+        document.getElementById('questions-container').classList.remove('hidden');
+
+        ['a', 'b', 'c', 'd'].forEach(p => {
+            const btn = document.getElementById('btn-' + p);
+            if (btn) btn.disabled = true;
+        });
+
+        const selectedBtn = document.getElementById('btn-' + type.toLowerCase());
+        if (selectedBtn) selectedBtn.classList.add('active-' + type.toLowerCase());
+
+        ['a', 'b', 'c', 'd'].forEach(p => {
+            const cols = document.querySelectorAll('.col-' + p);
+            cols.forEach(el => {
+                if (p === type.toLowerCase()) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+        });
+
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    // =========================================================
+    // FITUR KEAMANAN TINGKAT TINGGI (ANTI KELUAR TAB & SCREENSHOT)
+    // =========================================================
+
+    function blackoutScreen() {
+        if (!isPackageSelected || isTerminated) return;
+        hideAllQuestions();
+        document.getElementById('blackout-curtain').style.display = 'block';
+    }
+
+    function restoreScreen() {
+        document.getElementById('blackout-curtain').style.display = 'none';
+    }
+
+    function triggerSecurityViolation(reason) {
+        if (!isPackageSelected || isTerminated) return;
+
+        blackoutScreen();
+        document.getElementById('exam-content').style.display = 'none';
+        
+        violations++;
+        document.getElementById('violation-count').innerText = `${violations} / ${MAX_VIOLATIONS}`;
+
+        const overlay = document.getElementById('security-overlay');
+        const resumeBtn = document.getElementById('btn-resume-exam');
+
+        if (violations >= MAX_VIOLATIONS) {
+            isTerminated = true;
+            document.getElementById('overlay-title').innerText = "⛔ UJIAN DIBATALKAN";
+            document.getElementById('overlay-msg').innerText = "Batas pelanggaran maksimal tercapai. Akses dikunci permanen.";
+            document.getElementById('overlay-violation-info').innerText = "STATUS: DISKUALIFIKASI";
+            resumeBtn.style.display = 'none';
+        } else {
+            document.getElementById('overlay-msg').innerText = `Terdeteksi: ${reason}`;
+            document.getElementById('overlay-violation-info').innerText = `PERINGATAN KE-${violations} DARI ${MAX_VIOLATIONS}`;
+            resumeBtn.style.display = 'inline-block';
+        }
+        overlay.style.display = 'flex';
+
+        if (navigator.clipboard) navigator.clipboard.writeText('');
+    }
+
+    function resumeExam() {
+        if (isTerminated) return;
+        restoreScreen();
+        enterFullscreen();
+        document.getElementById('security-overlay').style.display = 'none';
+        document.getElementById('exam-content').style.display = 'block';
+    }
+
+    window.addEventListener('blur', () => {
+        blackoutScreen();
+        triggerSecurityViolation("Berpindah Aplikasi / Screenshot / Menekan Tombol HP");
+    });
+
+    window.addEventListener('focus', restoreScreen);
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            blackoutScreen();
+            triggerSecurityViolation("Keluar Tab / Membuka Aplikasi Lain");
+        } else {
+            restoreScreen();
+        }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement && isPackageSelected) {
+            triggerSecurityViolation("Keluar Layar Penuh (Fullscreen)");
+        }
+    });
+
+    window.addEventListener('beforeunload', (e) => {
+        if (isPackageSelected && !isTerminated) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (!isPackageSelected) return;
+
+        if (
+            e.key === 'PrintScreen' || e.keyCode === 44 ||
+            e.key === 'F12' ||
+            ((e.ctrlKey || e.metaKey) && ['u', 's', 'p', 'a', 'c'].includes(e.key.toLowerCase())) ||
+            ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 's', '3', '4', '5'].includes(e.key.toLowerCase()))
+        ) {
+            e.preventDefault();
+            triggerSecurityViolation("Akses Tombol Terlarang (Screenshot / Inspect)");
+        }
+    });
+
+    document.addEventListener('click', () => {
+        if (isPackageSelected && !document.fullscreenElement && !isTerminated) {
+            enterFullscreen();
+        }
+    });
+</script>
+
+</body>
+</html>
+SOAL_PH_SPLTV_DAN_SPTLDV.html
+Displaying SOAL_PH_SPLTV_DAN_SPTLDV.html.
